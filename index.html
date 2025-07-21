@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT職涯轉職計畫時間表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .goals-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .goal-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid;
+        }
+
+        .goal-card.skills { border-left-color: #3498db; }
+        .goal-card.cert { border-left-color: #e74c3c; }
+        .goal-card.language { border-left-color: #f39c12; }
+        .goal-card.job { border-left-color: #27ae60; }
+
+        .goal-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .goal-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .goal-card li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .goal-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .gantt-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .gantt-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .gantt-table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .gantt-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .gantt-table th.task-header {
+            text-align: left;
+            width: 200px;
+        }
+
+        .gantt-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.85em;
+        }
+
+        .task-name {
+            text-align: left !important;
+            font-weight: 600;
+            color: #2c3e50;
+            background: #f8f9fa !important;
+        }
+
+        .gantt-bar {
+            height: 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8em;
+            margin: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gantt-bar:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .skill-net { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .skill-cloud { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .skill-mobile { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        .skill-frontend { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .cert-azure { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .ielts-prep { background: linear-gradient(135deg, #27ae60, #229954); }
+        .project { background: linear-gradient(135deg, #34495e, #2c3e50); }
+        .job-search { background: linear-gradient(135deg, #e91e63, #ad1457); }
+
+        .milestone {
+            background: #ff6b6b !important;
+            border-radius: 50% !important;
+            width: 20px !important;
+            height: 20px !important;
+            margin: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 0.7em !important;
+        }
+
+        .week-goals {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .week-goals h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            text-align: center;
+        }
+
+        .month-section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .month-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .week-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .week-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .week-item ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .week-item li {
+            margin-bottom: 5px;
+        }
+
+        .reminder-box {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+
+        .reminder-box h3 {
+            margin-bottom: 10px;
+            color: #e74c3c;
+        }
+
+        .progress-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .progress-indicator.not-started { background: #bdc3c7; }
+        .progress-indicator.in-progress { background: #f39c12; }
+        .progress-indicator.completed { background: #27ae60; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .goals-summary { grid-template-columns: 1fr; }
+            .gantt-container { padding: 15px; }
+            .month-section { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 IT職涯轉職計畫時間表</h1>
+            <p>目標：12月底前取得澳洲/日本工作機會 | 台灣年薪150萬+ | 雅思6.0+</p>
+        </div>
+
+        <div class="goals-summary">
+            <div class="goal-card skills">
+                <h3>🛠️ 技能強化目標</h3>
+                <ul>
+                    <li>.NET Core/5+ 進階應用</li>
+                    <li>Azure 雲端服務基礎</li>
+                    <li>Docker 容器化部署</li>
+                    <li>.NET MAUI 跨平台開發</li>
+                    <li>React 前端框架</li>
+                </ul>
+            </div>
+            
+            <div class="goal-card cert">
+                <h3>🏆 證照考取目標</h3>
+                <ul>
+                    <li>Azure Fundamentals (AZ-900)</li>
+                    <li>Docker 基礎認證(選擇性)</li>
+                    <li>未來可考慮 AZ-204</li>
+                </ul>
+            </div>
+            
+            <div class="goal-card language">
+                <h3>🌍 語言能力目標</h3>
+                <ul>
+                    <li>雅思總分 6.0-6.5</li>
+                    <li>各科不低於 5.5</li>
+                    <li>11月考試，12月取得成績</li>
+                </ul>
+            </div>
+            
+            <div class="goal-card job">
+                <h3>💼 求職目標</h3>
+                <ul>
+                    <li>申請20+間澳洲/日本公司</li>
+                    <li>至少3間面試機會</li>
+                    <li>台灣備案：年薪150萬+</li>
+                    <li>完整作品集展示</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="gantt-container">
+            <h2 class="gantt-title">📊 甘特圖時程表</h2>
+            <table class="gantt-table">
+                <thead>
+                    <tr>
+                        <th class="task-header">學習項目 / 里程碑</th>
+                        <th>7月下</th>
+                        <th>8月上</th>
+                        <th>8月下</th>
+                        <th>9月上</th>
+                        <th>9月下</th>
+                        <th>10月上</th>
+                        <th>10月下</th>
+                        <th>11月上</th>
+                        <th>11月下</th>
+                        <th>12月上</th>
+                        <th>12月下</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="task-name">.NET & Web API 強化</td>
+                        <td><div class="gantt-bar skill-net">開始</div></td>
+                        <td><div class="gantt-bar skill-net">進階</div></td>
+                        <td><div class="gantt-bar skill-net">實作</div></td>
+                        <td><div class="gantt-bar skill-net">完成</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Azure 基礎學習</td>
+                        <td><div class="gantt-bar skill-cloud">準備</div></td>
+                        <td><div class="gantt-bar skill-cloud">學習</div></td>
+                        <td><div class="gantt-bar skill-cloud">複習</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">AZ-900 考試</td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="milestone">考</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Docker & DevOps</td>
+                        <td></td>
+                        <td><div class="gantt-bar skill-cloud">基礎</div></td>
+                        <td><div class="gantt-bar skill-cloud">實作</div></td>
+                        <td><div class="gantt-bar skill-cloud">部署</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">.NET MAUI 學習</td>
+                        <td><div class="gantt-bar skill-mobile">入門</div></td>
+                        <td><div class="gantt-bar skill-mobile">基礎</div></td>
+                        <td><div class="gantt-bar skill-mobile">進階</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">React 前端學習</td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="gantt-bar skill-frontend">基礎</div></td>
+                        <td><div class="gantt-bar skill-frontend">Hook</div></td>
+                        <td><div class="gantt-bar skill-frontend">整合</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">雅思準備</td>
+                        <td><div class="gantt-bar ielts-prep">評估</div></td>
+                        <td><div class="gantt-bar ielts-prep">基礎</div></td>
+                        <td><div class="gantt-bar ielts-prep">強化</div></td>
+                        <td><div class="gantt-bar ielts-prep">練習</div></td>
+                        <td><div class="gantt-bar ielts-prep">衝刺</div></td>
+                        <td><div class="gantt-bar ielts-prep">報名</div></td>
+                        <td></td>
+                        <td><div class="milestone">考</div></td>
+                        <td></td>
+                        <td><div class="gantt-bar ielts-prep">成績</div></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">Side Project 開發</td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="gantt-bar project">規劃</div></td>
+                        <td><div class="gantt-bar project">後端</div></td>
+                        <td><div class="gantt-bar project">前端</div></td>
+                        <td><div class="gantt-bar project">整合</div></td>
+                        <td><div class="gantt-bar project">部署</div></td>
+                        <td><div class="gantt-bar project">優化</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">履歷&作品集</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="gantt-bar job-search">準備</div></td>
+                        <td><div class="gantt-bar job-search">完成</div></td>
+                        <td><div class="gantt-bar job-search">優化</div></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="task-name">海外求職投遞</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><div class="gantt-bar job-search">開始</div></td>
+                        <td><div class="gantt-bar job-search">大量</div></td>
+                        <td><div class="gantt-bar job-search">持續</div></td>
+                        <td><div class="gantt-bar job-search">衝刺</div></td>
+                        <td><div class="gantt-bar job-search">收尾</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="week-goals">
+            <h2>📅 每週詳細學習目標</h2>
+            
+            <div class="month-section">
+                <div class="month-title">七月份 (7/22-7/31) - 基礎建立期</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator in-progress"></span>Week 1-2 (7/22-7/31)</h4>
+                    <ul>
+                        <li><strong>.NET進階:</strong> 學習Clean Architecture概念，觀看Nick Chapsas教學</li>
+                        <li><strong>Azure入門:</strong> 註冊Azure帳號，完成Microsoft Learn Azure基礎模組</li>
+                        <li><strong>MAUI基礎:</strong> 安裝Visual Studio MAUI工具，建立第一個Hello World應用</li>
+                        <li><strong>雅思評估:</strong> 做一次完整模擬測試，了解目前程度</li>
+                        <li><strong>每日英語:</strong> BBC 6 Minute English (工作日晚上20分鐘)</li>
+                    </ul>
+                </div>
+                
+                <div class="reminder-box">
+                    <h3>🎯 七月重點提醒</h3>
+                    <p>這個月是基礎建立期，不要急躁。重點是建立學習習慣和評估現況。每天晚上孩子睡後至少學習1小時。</p>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">八月份 (8/1-8/31) - 技能強化期</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 1 (8/1-8/7)</h4>
+                    <ul>
+                        <li><strong>.NET實作:</strong> Entity Framework Core + Repository Pattern實作練習</li>
+                        <li><strong>Azure深入:</strong> 完成AZ-900學習路徑50%</li>
+                        <li><strong>Docker基礎:</strong> 安裝Docker，學習基本指令</li>
+                        <li><strong>雅思寫作:</strong> 開始Task 1&2基礎練習</li>
+                        <li><strong>每週目標:</strong> 完成一個簡單的Web API專案</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 2 (8/8-8/14)</h4>
+                    <ul>
+                        <li><strong>.NET安全:</strong> JWT Authentication實作</li>
+                        <li><strong>Azure實作:</strong> 建立第一個App Service</li>
+                        <li><strong>Docker實作:</strong> 將.NET應用容器化</li>
+                        <li><strong>MAUI進階:</strong> 資料綁定和MVVM模式</li>
+                        <li><strong>雅思口說:</strong> Part 1話題練習</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 3 (8/15-8/21)</h4>
+                    <ul>
+                        <li><strong>Azure認證衝刺:</strong> AZ-900考試準備，做模擬考</li>
+                        <li><strong>DevOps基礎:</strong> GitHub Actions設定CI/CD</li>
+                        <li><strong>MAUI應用:</strong> 完成一個簡單的CRUD應用</li>
+                        <li><strong>雅思聽力:</strong> 每天練習30分鐘</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 4 (8/22-8/31)</h4>
+                    <ul>
+                        <li><strong>🎯 AZ-900考試</strong> (建議8/25-8/30之間)</li>
+                        <li><strong>React基礎:</strong> 開始學習React Hook</li>
+                        <li><strong>雅思閱讀:</strong> 掌握各類題型技巧</li>
+                        <li><strong>月末總結:</strong> 整理學習筆記，規劃下月重點</li>
+                    </ul>
+                </div>
+                
+                <div class="reminder-box">
+                    <h3>🎯 八月重點提醒</h3>
+                    <p>本月重點是AZ-900考試和技能實作。建議報名8月底的AZ-900考試，給自己壓力。每週至少完成一個小專案。</p>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">九月份 (9/1-9/30) - 整合應用期</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 1-2 (9/1-9/14)</h4>
+                    <ul>
+                        <li><strong>React + .NET整合:</strong> 建立前後端分離架構</li>
+                        <li><strong>進階部署:</strong> Azure + Docker自動化部署</li>
+                        <li><strong>雅思模擬:</strong> 每週一次完整模擬考</li>
+                        <li><strong>Side Project規劃:</strong> 確定要開發的系統類型</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 3-4 (9/15-9/30)</h4>
+                    <ul>
+                        <li><strong>專案開發:</strong> 開始Side Project後端開發</li>
+                        <li><strong>技能整合:</strong> 使用所學技術棧</li>
+                        <li><strong>雅思報名:</strong> 報名11月考試</li>
+                        <li><strong>履歷準備:</strong> 開始撰寫英文履歷</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">十月份 (10/1-10/31) - 作品開發期</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 1-2 (10/1-10/14)</h4>
+                    <ul>
+                        <li><strong>專案開發:</strong> 完成後端API和資料庫設計</li>
+                        <li><strong>前端開發:</strong> React介面開發</li>
+                        <li><strong>雅思衝刺:</strong> 每天2小時集中練習</li>
+                        <li><strong>LinkedIn優化:</strong> 建立專業檔案</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 3-4 (10/15-10/31)</h4>
+                    <ul>
+                        <li><strong>專案完成:</strong> 前後端整合和測試</li>
+                        <li><strong>部署上線:</strong> Azure部署和域名設定</li>
+                        <li><strong>文件撰寫:</strong> README和技術文件</li>
+                        <li><strong>雅思最後衝刺:</strong> 弱點加強</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">十一月份 (11/1-11/30) - 考試求職期</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 1-2 (11/1-11/14)</h4>
+                    <ul>
+                        <li><strong>🎯 雅思考試</strong> (建議11/9或11/16)</li>
+                        <li><strong>作品集完善:</strong> GitHub專案整理</li>
+                        <li><strong>求職準備:</strong> 收集目標公司清單</li>
+                        <li><strong>面試準備:</strong> 技術問題練習</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 3-4 (11/15-11/30)</h4>
+                    <ul>
+                        <li><strong>履歷投遞:</strong> 開始大量投遞澳洲/日本職缺</li>
+                        <li><strong>作品優化:</strong> 根據面試回饋調整</li>
+                        <li><strong>網路建立:</strong> LinkedIn主動連結</li>
+                        <li><strong>台灣備案:</strong> 也投遞台灣高薪職缺</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">十二月份 (12/1-12/31) - 面試收尾期</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 1-2 (12/1-12/14)</h4>
+                    <ul>
+                        <li><strong>面試進行:</strong> 積極參與各種面試</li>
+                        <li><strong>雅思成績:</strong> 取得正式成績單</li>
+                        <li><strong>持續投遞:</strong> 擴大投遞範圍</li>
+                        <li><strong>薪資談判:</strong> 準備薪資談判策略</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator not-started"></span>Week 3-4 (12/15-12/31)</h4>
+                    <ul>
+                        <li><strong>Offer評估:</strong> 比較各個工作機會</li>
+                        <li><strong>決策時刻:</strong> 選擇最適合的職位</li>
+                        <li><strong>簽約準備:</strong> 準備相關文件</li>
+                        <li><strong>🎯 目標達成!</strong> 取得理想工作offer</li>
+                    </ul>
+                </div>
+                
+                <div class="reminder-box">
+                    <h3>🎯 十二月重點提醒</h3>
+                    <p>最後衝刺階段！要有信心，你已經準備充分。記住：技能、證照、語言、作品集都已具備，成功在望！</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="week-goals">
+            <h2>📋 重要提醒事項</h2>
+            
+            <div class="month-section">
+                <div class="month-title">🎯 考試重要日期</div>
+                <div class="week-item">
+                    <h4><span class="progress-indicator cert-azure"></span>AZ-900 Azure考試</h4>
+                    <ul>
+                        <li><strong>建議考試日期:</strong> 2024年8月25-30日</li>
+                        <li><strong>報名網站:</strong> Microsoft Learn</li>
+                        <li><strong>考試費用:</strong> 約台幣3,000元</li>
+                        <li><strong>備考時間:</strong> 3-4週充分準備</li>
+                        <li><strong>通過標準:</strong> 700分以上 (滿分1000分)</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator ielts-prep"></span>IELTS 雅思考試</h4>
+                    <ul>
+                        <li><strong>建議考試日期:</strong> 2024年11月9日 或 11月16日</li>
+                        <li><strong>報名網站:</strong> 雅思官方 (IDP或British Council)</li>
+                        <li><strong>考試類型:</strong> General Training (移民用)</li>
+                        <li><strong>考試費用:</strong> 約台幣7,500元</li>
+                        <li><strong>目標分數:</strong> 總分6.0-6.5，各科不低於5.5</li>
+                        <li><strong>成績公布:</strong> 考後13天 (約11月底或12月初)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">💡 學習資源推薦</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator skill-net"></span>.NET & Web API 學習資源</h4>
+                    <ul>
+                        <li><strong>Microsoft Learn:</strong> Build web APIs with ASP.NET Core (免費)</li>
+                        <li><strong>YouTube:</strong> Nick Chapsas - Clean Architecture 系列</li>
+                        <li><strong>Udemy:</strong> Clean Architecture with ASP.NET Core</li>
+                        <li><strong>實作練習:</strong> 建立Blog系統或任務管理API</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator skill-cloud"></span>Azure & DevOps 學習資源</h4>
+                    <ul>
+                        <li><strong>Microsoft Learn:</strong> Azure Fundamentals learning path (免費)</li>
+                        <li><strong>實作環境:</strong> Azure 免費帳戶 (12個月免費額度)</li>
+                        <li><strong>Docker:</strong> FreeCodeCamp Docker for Beginners</li>
+                        <li><strong>GitHub Actions:</strong> 官方文件 + 實作部署到Azure</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator ielts-prep"></span>雅思學習資源</h4>
+                    <ul>
+                        <li><strong>免費資源:</strong> IELTS Liz (YouTube + 網站)</li>
+                        <li><strong>劍橋真題:</strong> Cambridge IELTS 16-18</li>
+                        <li><strong>線上練習:</strong> IELTS Online (雅思哥app)</li>
+                        <li><strong>口說練習:</strong> HelloTalk語言交換app</li>
+                        <li><strong>每日英語:</strong> BBC 6 Minute English</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">🎯 Side Project 建議</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator project"></span>推薦專案類型</h4>
+                    <ul>
+                        <li><strong>個人部落格系統:</strong> .NET API + React前端 + Azure部署</li>
+                        <li><strong>任務管理系統:</strong> 類似Trello，展示CRUD和權限管理</li>
+                        <li><strong>小型ERP:</strong> 進銷存系統，展示複雜業務邏輯</li>
+                        <li><strong>加分項目:</strong> 加上MAUI手機App版本</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator project"></span>技術架構建議</h4>
+                    <ul>
+                        <li><strong>後端:</strong> .NET 6/8 + Entity Framework + JWT + Clean Architecture</li>
+                        <li><strong>前端:</strong> React + TypeScript + Tailwind CSS</li>
+                        <li><strong>資料庫:</strong> SQL Server (Azure SQL Database)</li>
+                        <li><strong>部署:</strong> Docker + Azure App Service + GitHub Actions</li>
+                        <li><strong>文件:</strong> Swagger API文件 + 詳細README</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="month-section">
+                <div class="month-title">🌍 求職市場分析</div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator job-search"></span>澳洲求職重點</h4>
+                    <ul>
+                        <li><strong>熱門城市:</strong> 墨爾本、雪梨、布里斯本</li>
+                        <li><strong>平台:</strong> SEEK, Indeed Australia, LinkedIn</li>
+                        <li><strong>簽證要求:</strong> 雅思6.0+，技術移民或雇主擔保</li>
+                        <li><strong>薪資範圍:</strong> 中級.NET開發 AUD 80,000-120,000</li>
+                        <li><strong>技能重點:</strong> Azure、.NET Core、微服務架構</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator job-search"></span>日本求職重點</h4>
+                    <ul>
+                        <li><strong>熱門城市:</strong> 東京、大阪、名古屋</li>
+                        <li><strong>平台:</strong> Japan Dev, LinkedIn, Wantedly</li>
+                        <li><strong>語言要求:</strong> 英語優先公司較多，日語加分</li>
+                        <li><strong>薪資範圍:</strong> 中級開發 JPY 6,000,000-9,000,000</li>
+                        <li><strong>文化適應:</strong> 重視團隊合作和長期承諾</li>
+                    </ul>
+                </div>
+                
+                <div class="week-item">
+                    <h4><span class="progress-indicator job-search"></span>台灣高薪職缺</h4>
+                    <ul>
+                        <li><strong>目標公司:</strong> 外商、金融科技、大型企業</li>
+                        <li><strong>職位類型:</strong> 資深.NET工程師、全端開發、架構師</li>
+                        <li><strong>薪資目標:</strong> 年薪150-200萬台幣</li>
+                        <li><strong>技能要求:</strong> 雲端架構、微服務、DevOps經驗</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="reminder-box" style="margin: 30px;">
+            <h3>🚀 成功關鍵提醒</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+                <div>
+                    <h4>📚 學習策略</h4>
+                    <ul style="margin-top: 8px;">
+                        <li>每天至少學習1小時 (孩子睡後)</li>
+                        <li>週末可增加到3-4小時</li>
+                        <li>理論與實作並重</li>
+                        <li>記錄學習筆記和心得</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>⏰ 時間管理</h4>
+                    <ul style="margin-top: 8px;">
+                        <li>善用通勤時間聽英語</li>
+                        <li>午休時間複習理論</li>
+                        <li>建立固定學習時段</li>
+                        <li>家人支持很重要</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>💪 心態調整</h4>
+                    <ul style="margin-top: 8px;">
+                        <li>保持持續學習動力</li>
+                        <li>不要完美主義</li>
+                        <li>勇於實作和展示</li>
+                        <li>相信自己能成功</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加進度追蹤功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模擬進度更新
+            function updateProgress() {
+                const indicators = document.querySelectorAll('.progress-indicator');
+                // 這裡可以添加實際的進度追蹤邏輯
+            }
+            
+            // 添加點擊事件來標記完成
+            const weekItems = document.querySelectorAll('.week-item');
+            weekItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const indicator = this.querySelector('.progress-indicator');
+                    if (indicator.classList.contains('not-started')) {
+                        indicator.classList.remove('not-started');
+                        indicator.classList.add('in-progress');
+                    } else if (indicator.classList.contains('in-progress')) {
+                        indicator.classList.remove('in-progress');
+                        indicator.classList.add('completed');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
